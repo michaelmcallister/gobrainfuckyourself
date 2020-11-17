@@ -3,16 +3,17 @@ package brainfuck
 import (
 	"errors"
 	"fmt"
-	"os"
+	"io"
 )
 
-// State contains the interal BF state.
-type State struct {
-	ptr   int         // current data pointer.
-	pc    int         // program counter. Current location in the tape.
-	depth int         // Used for bracket matching.
-	tape  []OpCode    // Parsed operators.
-	cells [30000]byte // Memory layout.
+// BF contains the interal BF state.
+type BF struct {
+	RW    io.ReadWriter // ReadWriter used for program input and output.
+	ptr   int           // current data pointer.
+	pc    int           // program counter. Current location in the tape.
+	depth int           // Used for bracket matching.
+	tape  []OpCode      // Parsed operators.
+	cells [30000]byte   // Memory layout.
 }
 
 // ErrUnmatchedBracket will be returned if the supplied instructions contain an
@@ -44,7 +45,7 @@ const (
 )
 
 // New initialises a new brainfuck interpreter.
-func New(input string) *State {
+func New(input string, readwriter io.ReadWriter) *BF {
 	var ins []OpCode
 	for _, op := range input {
 		switch OpCode(op) {
@@ -66,12 +67,12 @@ func New(input string) *State {
 			ins = append(ins, JumpBackward)
 		}
 	}
-	return &State{tape: ins}
+	return &BF{tape: ins, RW: readwriter}
 }
 
 // Step will evaluate the tape at the current program counter. Incrementing the
 // program counter after a successful evaluation.
-func (s *State) Step() error {
+func (s *BF) Step() error {
 	switch s.tape[s.pc] {
 	case IncrementPointer:
 		s.ptr++
@@ -82,10 +83,10 @@ func (s *State) Step() error {
 	case DecrementByte:
 		s.cells[s.ptr]--
 	case OutputByte:
-		fmt.Printf("%c", s.cells[s.ptr])
+		fmt.Fprintf(s.RW, "%c", s.cells[s.ptr])
 	case StoreByte:
-		var b []byte = make([]byte, 1)
-		os.Stdin.Read(b)
+		var b = make([]byte, 1)
+		s.RW.Read(b)
 		s.cells[s.ptr] = b[0]
 	case JumpForward:
 		if s.cells[s.ptr] == 0 {
@@ -112,7 +113,7 @@ func (s *State) Step() error {
 	return nil
 }
 
-func (s *State) findMatchingRightBracket() (int, error) {
+func (s *BF) findMatchingRightBracket() (int, error) {
 	found := false
 	currentDepth := s.depth
 	i := s.pc
@@ -135,7 +136,7 @@ func (s *State) findMatchingRightBracket() (int, error) {
 	return 0, ErrUnmatchedBracket
 }
 
-func (s *State) findMatchingLeftBracket() (int, error) {
+func (s *BF) findMatchingLeftBracket() (int, error) {
 	found := false
 	currentDepth := s.depth
 	i := s.pc
@@ -159,8 +160,11 @@ func (s *State) findMatchingLeftBracket() (int, error) {
 }
 
 // Run will execute the tape that is loaded into memory.
-func (s *State) Run() {
+func (s *BF) Run() error {
 	for s.pc < len(s.tape) {
-		s.Step()
+		if err := s.Step(); err != nil {
+			return err
+		}
 	}
+	return nil
 }
