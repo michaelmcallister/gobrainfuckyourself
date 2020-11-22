@@ -39,8 +39,8 @@ const (
 	StoreByte OpCode = ','
 	// JumpForward will move the ptr to the next ']' if the byte at ptr is 0.
 	JumpForward OpCode = '['
-	// JumpBackward will move the ptr to the preceeding '[' if the byte at ptr
-	// is 0.
+	// JumpBackward will move the ptr to the preceding '[' if the byte at ptr is
+	// 0.
 	JumpBackward OpCode = ']'
 )
 
