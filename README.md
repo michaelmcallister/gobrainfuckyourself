@@ -1,7 +1,7 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
-[![GitHub go.mod Go version]][goversion-url]
-[![Go Report Card]][goreport-url]
+![GitHub go.mod Go version][goversion-url]
+![Go Report Card][goreport-url]
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
