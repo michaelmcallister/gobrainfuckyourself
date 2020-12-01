@@ -2,7 +2,7 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 ![GitHub go.mod Go version][goversion-url]
 ![Go Report Card][goreport-url]
-[![codecov](https://codecov.io/gh/michaelmcallister/gobrainfuckyourself/branch/main/graph/badge.svg?token=9Z57SJ0F69)](https://codecov.io/gh/michaelmcallister/gobrainfuckyourself)
+[![Coverage Status](https://coveralls.io/repos/github/michaelmcallister/gobrainfuckyourself/badge.svg?branch=main)](https://coveralls.io/github/michaelmcallister/gobrainfuckyourself?branch=main)
 [![Build Status](https://travis-ci.org/michaelmcallister/gobrainfuckyourself.svg?branch=main)](https://travis-ci.org/michaelmcallister/gobrainfuckyourself)
 <!-- PROJECT LOGO -->
 <br />
