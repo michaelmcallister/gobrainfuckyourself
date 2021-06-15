@@ -45,6 +45,12 @@ func Test(t *testing.T) {
 			wantErr:      true,
 			want:         "",
 		},
+		{
+			desc:         "test jumps",
+			instructions: ">>[-]<<[->>+<<]",
+			wantErr:      false,
+			want:         "",
+		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
